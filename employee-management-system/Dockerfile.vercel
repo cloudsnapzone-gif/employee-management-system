@@ -1,0 +1,15 @@
+FROM dunglas/frankenphp:php8.4-bookworm
+
+WORKDIR /app/public
+
+RUN install-php-extensions pdo_mysql mysqli
+
+RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
+
+COPY . /app/public
+
+ENV SERVER_NAME=:80
+
+EXPOSE 80
+
+CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--adapter", "caddyfile"]
