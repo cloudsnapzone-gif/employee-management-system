@@ -1,15 +1,13 @@
-FROM dunglas/frankenphp:php8.4-bookworm
+FROM dunglas/frankenphp:1-php8.4-alpine
 
-WORKDIR /app/public
+WORKDIR /app
 
-RUN install-php-extensions pdo_mysql mysqli
+RUN install-php-extensions mysqli pdo_mysql
 
-RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
+COPY . /app
 
-COPY . /app/public
+COPY Caddyfile /etc/caddy/Caddyfile
 
-ENV SERVER_NAME=:80
+ENV PORT=80
 
-EXPOSE 80
-
-CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--adapter", "caddyfile"]
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
